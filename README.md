@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Projeto Java com Spring Boot, Spring Security e Thymeleaf</title>
-</head>
-<body>
-  <h1>Projeto Java com Spring Boot, Spring Security e Thymeleaf ✨💻</h1>
+ <h1>Projeto Java com Spring Boot, Spring Security e Thymeleaf ✨💻</h1>
 
   <h2>Tecnologias Utilizadas 🛠️</h2>
   <ul>
