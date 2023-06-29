@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -40,7 +41,7 @@
 						<label for="sobrenome" class="active" >Sobrenome:</label>
 						<input name="sobrenome" class="validate" id="sobrenome" th:field="*{sobrenome}">
 					</div>
-					<div class="input-fiel col s1 ">
+					<div sec:authorize="hasAnyRole('ROLE_TECNICO')" class="input-fiel col s1">
 						<label for="idade" class="active">Idade:</label>
 						<input name="idade" id="idade" class="validate" th:field="*{idade}">
 					</div>
