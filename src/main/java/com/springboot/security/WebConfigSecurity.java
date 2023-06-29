@@ -25,7 +25,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter{
 		http.csrf()
 		.disable() // desativa as configurações padrão de memória
 		.authorizeRequests() // permitir restringir acessos
-		.antMatchers(HttpMethod.GET, ".").permitAll() //qualquer usuário acessa a página inicial
+		.antMatchers(HttpMethod.GET, "/").permitAll() //qualquer usuário acessa a página inicial
+		.antMatchers(HttpMethod.GET, "/cadastropessoa").hasAnyRole("ADMIN")
 		.anyRequest().authenticated()
 		.and().formLogin().permitAll() // permite qualquer usuário
 		.and().logout() // Mapeia a url de Logout e invalida usuário autenticado
