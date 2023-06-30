@@ -6,15 +6,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @SuppressWarnings("deprecation")
 @Configuration
-@EnableWebSecurity
+@EnableWebMvc
 public class WebConfigSecurity extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -29,7 +29,10 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter{
 		.antMatchers(HttpMethod.GET, "/cadastropessoa").hasAnyRole("ADMIN")
 		.anyRequest().authenticated()
 		.and().formLogin().permitAll() // permite qualquer usuário
-		.and().logout() // Mapeia a url de Logout e invalida usuário autenticado
+		.loginPage("/login")
+		.defaultSuccessUrl("/cadastropessoa")
+		.failureUrl("/login?error=true")
+		.and().logout().logoutSuccessUrl("/login") // Mapeia a url de Logout e invalida usuário autenticado
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 		
 	}
@@ -49,6 +52,21 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter{
 	@Override // ignora URL específicas
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/materialize/**");
+		
 	}
 
+	@SuppressWarnings("unused")
+	private void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/webjars/**", "/resources/**", "/static/**", "/img/**", "/css/**",
+				"/js/**","classpath:/static/", "classpath:/resources/")
+		.addResourceLocations("/webjars/", "/resources/",
+						"classpath:/static/**", "classpath:/static/img/**", "classpath:/static/",
+						"classpath:/resources/", "classpath:/static/css/", "classpath:/static/js/", "/resources/**",
+						"/WEB-INF/classes/static/**");
+
+	}
+ 
+
 }
+
+

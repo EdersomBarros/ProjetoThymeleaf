@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="icon" href="https://www.thymeleaf.org/images/thymeleaf.png">
+	<title>Login do Projeto Thymeleaf</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+</head>
+<style>
+	html,
+	body {
+		height: 85%;
+	}
+
+	html {
+		display: table;
+		margin: auto;
+	}
+
+	body {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	form input[type=submit] {
+		color: white;
+	}
+</style>
+
+
+<body class="lime lighten-5">
+	
+	<h4 class="indigo-text">Bem vindo ao Projeto Thymeleaf</h4>
+	
+	<form th:action="@{/login}" method="post" class="col s12">
+		<div class="card-panel z-depth-5">
+			<div class="row margin">
+				<div class="col s12 m12 l12 center">
+					<img src="https://i.imgur.com/ypAbAYt.png" alt="" 
+					class="responsive-img circle" style="width:100px;">
+					<p>Acesso ao Sistema</p>
+				</div>
+			</div>
+				<div class="col s12 m12 l12">
+					<div class="input-field">
+						<i class="material-icons prefix">person</i>
+						<label for="username" >Login</label>
+						<input type="text" id="username" name="username">
+					</div>
+				</div>
+			
+			<div class="col m12 l12">
+				<div class="input-field">
+					<i class="material-icons prefix">lock</i>
+					<label for="password">Senha</label>
+					<input type="password" id="password" name="password">
+				</div>
+			</div>
+			
+				<div class="center">
+					<input name="logar" type="submit" value="Login" class=" col s6 btn waves-effect waves-light"
+						style="width:70%; background-color: #ff4081;">
+				</div>
+				<br>
+				<div class="right">
+					<label style='float: right;'>
+						<a href='#!'><b>Esqueceu a Senha?</b></a>
+					</label>
+				</div>
+				<br>
+				
+		
+		</div>
+	</form>
+
+
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	
+</body>
+
+</html>
