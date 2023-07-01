@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<!-- Adicionando JQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+		integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 </head>
 <style>
 	form input[type=submit] {
@@ -19,7 +22,8 @@
 </style>
 
 <body>
-	<h5>Cadastro de Pessoas</h5>
+	<section class="container">
+	<h5 class="center-align">CADASTRO DE PESSOAS</h5>
 	<div class="row">
 		<br/>
 			<div th:each ="m: ${msg}">
@@ -27,40 +31,66 @@
 			</div>
 		<br/>
 		<div class="col s12">
-			<form action="salvarpessoa" id="formpessoa" method="post" th:object="${pessoaobj}" class="col s12">
+			<form action="salvarpessoa" id="formpessoa" method="post" th:object="${pessoaobj}" class="col s12" autocomplete="off">
 				<div class="row">
 					<div class="input-fiel col s1 ">
 						<label for="id">ID</label>
-						<input name="id" th:field="*{id}" id="id" readonly="readonly">
+						<input  name="id" th:field="*{id}" id="id" readonly="readonly">
 					</div>
-					<div class="input-fiel col s6 ">
+					<div class="input-fiel col s11 ">
+						
 						<label for="nome" class="active" >Nome:</label>
-						<input name="nome" class="validate" id="nome" th:field="*{nome}" />
+						<input placeholder="Informe o nome da pessoa" name="nome" class="validate" id="nome" th:field="*{nome}">
 					</div>
 				</div>
 				<div class="row">
 					<div class="input-fiel col s6 ">
 						<label for="sobrenome" class="active" >Sobrenome:</label>
-						<input name="sobrenome" class="validate" id="sobrenome" th:field="*{sobrenome}">
+						<input placeholder="Informe o sobrenome da pessoa" name="sobrenome" class="validate" id="sobrenome" th:field="*{sobrenome}">
 					</div>
 					<div sec:authorize="hasAnyRole('ROLE_TECNICO')" class="input-fiel col s1">
 						<label for="idade" class="active">Idade:</label>
 						<input name="idade" id="idade" class="validate" th:field="*{idade}">
 					</div>
-				</div>
-				<div class="row">
-					<div class="input-field col s2">
-						<i class="material-icons prefix">contact_phone</i>
-						<input id="icon_telephone" type="tel" class="validate">
-						<label for="icon_telephone">Telefone</label>
+					<div class="input-fiel col s5 ">
+						<label for="cpf" class="active" >CPF:</label>
+						<input placeholder="Informe o CPF" name="cpf" class="validate" id="cpf"  th:field="*{cpf}">
 					</div>
 				</div>
+							<!--  -->
+				<div class="row">
+					<div class="input-field col s3">
+						<input placeholder="CEP" id="cep" name="cep" class="validate" th:field="*{cep}">
+						<label for="cep"  class="active">Cep</label>
+					</div>
+					<div class="input-field col s4">
+						<input id="rua" name="rua" class="validate" th:field="*{rua}">
+						<label for="rua"  class="active">Rua</label>
+					</div>
+					<div class="input-field col s5">
+						<input id="bairro" name="bairro" class="validate" th:field="*{bairro}">
+						<label for="bairro"  class="active">Bairro</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s5">
+						<input id="cidade" name="cidade" class="validate" th:field="*{cidade}">
+						<label for="cidade"  class="active">Cidade</label>
+					</div>
+					<div class="input-field col s7">
+						<input id="uf" name="uf" class="validate" th:field="*{uf}">
+						<label for="uf"  class="active">UF</label>
+					</div>
+					
+				</div>
+				
+				<br>
 				<div class="row">
 					<div class="input-fiel col s6 ">
 						<input class="btn waves-effect waves-light" type="submit" value="Salvar" />
 						<button class="btn waves-effect waves-light" onclick="document
 						.getElementById('formpessoa')
-						.reset();"
+						.reset()"
 						>Novo</button>
 					</div>
 				</div>
@@ -109,8 +139,71 @@
 			</tbody>
 		</table>
 
+</section>
+<!-- Adicionando Javascript -->
+<script>
+	$(document).ready(function () {
+		function limpa_formulário_cep() {
+			// Limpa valores do formulário de cep.
+			$("#rua").val("");
+			$("#bairro").val("");
+			$("#cidade").val("");
+			$("#uf").val("");
+		}
 
-		
+		//Quando o campo cep perde o foco.
+		$("#cep").blur(function () {
+			//Nova variável "cep" somente com dígitos.
+			var cep = $(this).val().replace(/\D/g, '');
+
+			//Verifica se campo cep possui valor informado.
+			if (cep != "") {
+
+				//Expressão regular para validar o CEP.
+				var validacep = /^[0-9]{8}$/;
+
+				//Valida o formato do CEP.
+				if (validacep.test(cep)) {
+
+					//Preenche os campos com "..." enquanto consulta webservice.
+					$("#rua").val("...");
+					$("#bairro").val("...");
+					$("#cidade").val("...");
+					$("#uf").val("...");
+					
+
+					//Consulta o webservice viacep.com.br/
+					$.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+						if (!("erro" in dados)) {
+							//Atualiza os campos com os valores da consulta.
+							$("#rua").val(dados.logradouro);
+							$("#bairro").val(dados.bairro);
+							$("#cidade").val(dados.localidade);
+							$("#uf").val(dados.uf);
+							
+						} //end if.
+						else {
+							//CEP pesquisado não foi encontrado.
+							limpa_formulário_cep();
+							alert("CEP não encontrado.");
+						}
+					});
+				} //end if.
+				else {
+					//cep é inválido.
+					limpa_formulário_cep();
+					alert("Formato de CEP inválido.");
+				}
+			} //end if.
+			else {
+				//cep sem valor, limpa formulário.
+				limpa_formulário_cep();
+			}
+		});
+	});
+</script>
+
 </body>
 
 </html>
