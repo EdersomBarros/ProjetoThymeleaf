@@ -51,6 +51,7 @@ public class Pessoa implements Serializable{
 	@CPF
 	private String cpf;
 	
+	private String sexopessoa;
 	
 	public Pessoa() {
 		
@@ -140,6 +141,14 @@ public class Pessoa implements Serializable{
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public String getSexopessoa() {
+		return sexopessoa;
+	}
+
+	public void setSexopessoa(String sexopessoa) {
+		this.sexopessoa = sexopessoa;
 	}
 	
 	

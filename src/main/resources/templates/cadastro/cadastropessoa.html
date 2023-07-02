@@ -14,6 +14,12 @@
 	<!-- Adicionando JQuery -->
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
 		integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+		
+	<script>
+		$(document).ready(function () {
+			$('select').material_select();
+		});
+	</script>
 </head>
 <style>
 	form input[type=submit] {
@@ -44,17 +50,27 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="input-fiel col s6 ">
-						<label for="sobrenome" class="active" >Sobrenome:</label>
-						<input placeholder="Informe o sobrenome da pessoa" name="sobrenome" class="validate" id="sobrenome" th:field="*{sobrenome}">
+					<div class="input-fiel col s4 ">
+						<label for="sobrenome" class="active">Sobrenome:</label>
+						<input placeholder="Informe o sobrenome da pessoa" name="sobrenome" class="validate" id="sobrenome"
+							th:field="*{sobrenome}">
 					</div>
 					<div sec:authorize="hasAnyRole('ROLE_TECNICO')" class="input-fiel col s1">
 						<label for="idade" class="active">Idade:</label>
 						<input name="idade" id="idade" class="validate" th:field="*{idade}">
 					</div>
-					<div class="input-fiel col s5 ">
-						<label for="cpf" class="active" >CPF:</label>
-						<input placeholder="Informe o CPF" name="cpf" class="validate" id="cpf"  th:field="*{cpf}">
+					<div class="input-fiel col s4 ">
+						<label for="cpf" class="active">CPF:</label>
+						<input placeholder="Informe o CPF" name="cpf" class="validate" id="cpf" th:field="*{cpf}">
+					</div>
+					<div class="input-field col s3">
+						<select class="browser-default" th:field="*{sexopessoa}">
+							<option value="" disabled selected >--[Selecione]--</option>
+							<option value="MASCULINO" th:text="Masculino">Masculino</option>
+							<option value="FEMININO" th:text="Feminino">Feminino</option>
+						</select>
+						<label for="sexopessoa" class="active">Sexo</label>
+						<br>
 					</div>
 				</div>
 							<!--  -->
@@ -90,7 +106,7 @@
 						<input class="btn waves-effect waves-light" type="submit" value="Salvar" />
 						<button class="btn waves-effect waves-light" onclick="document
 						.getElementById('formpessoa')
-						.reset()"
+						.reset();"
 						>Novo</button>
 					</div>
 				</div>
@@ -103,43 +119,63 @@
 		
 		<br />
 		<br />
-		<div class="row">
-			<div class="col s12">
-				<form action="pesquisapessoa" method="post">
-					<div class="input-fiel col s6 ">
-						<label for="nomepesquisa" class="active">Pesquisa por Nome</label>
-						<input name="nomepesquisa" class="validate" id="nomepesquisa">
-						<input class="btn waves-effect waves-light" type="submit" value="Buscar" />
-						<a href="/listapessoas" class="btn waves-effect waves-light">Lista das Pessoas</a>
-					</div>
-				</form>
+		
+		<fieldset>
+			<legend> Campos de Pesquisa </legend>
+			<div class="row">
+				<div class="col s12">
+					<form action="pesquisapessoa" method="post">
+						<div class="input-fiel col s6 ">
+							<label for="nomepesquisa" class="active">Pesquisa por Nome</label>
+							<input name="nomepesquisa" class="validate" id="nomepesquisa">
+						</div>
+						<div class="input-field col s6">
+							<label for="pesqsexo" class="active">Pesquisa Sexo</label>
+							<select class="browser-default" name="pesqsexo" id="pesqsexo">
+								<option value="">--[Todos]--</option>
+								<option value="MASCULINO" th:text="Masculino" />
+								<option value="FEMININO" th:text="Feminino" />
+							</select>
+						</div>
+						<div class="input-field col s12">
+							<input class="btn waves-effect waves-light" type="submit" value="Buscar" />
+							<a href="/listapessoas" class="btn waves-effect waves-light">Lista das Pessoas</a>
+						</div>
+				</div>
+					</form>
+				</div>
 			</div>
-		</div>
+		</fieldset>
+		
 		<br />
 		<br />
 		<hr>
-		<table class="striped">
-			<thead>
-				<tr>
-					<th>Id:</th>
-					<th>Nome</th>
-					<th>Sobrenome</th>
-					<th>Idade</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="pessoa: ${pessoas}">
-					<td th:text="${pessoa.id}"></td>
-					<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}"><span th:text="${pessoa.nome}"></span></a></td>
-					<td th:text="${pessoa.sobrenome}"></td>
-					<td th:text="${pessoa.idade}"></td>
-					<td><a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" >Editar</a></td>
-					<td><a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}" >Exluir</a></td>
-				</tr>
-			</tbody>
-		</table>
-
+		<fieldset>
+			<legend><strong>LISTA DE PESSOAS</strong></legend>
+			<table class="striped">
+				<thead>
+					<tr>
+						<th>Id:</th>
+						<th>Nome</th>
+						<th>Sobrenome</th>
+						<th>Idade</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="pessoa:${pessoas}">
+						<td th:text="${pessoa.id}"></td>
+						<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}"><span
+									th:text="${pessoa.nome}"></span></a></td>
+						<td th:text="${pessoa.sobrenome}"></td>
+						<td th:text="${pessoa.idade}"></td>
+						<td><a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}">Editar</a></td>
+						<td><a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}">Exluir</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
 </section>
+
 <!-- Adicionando Javascript -->
 <script>
 	$(document).ready(function () {
