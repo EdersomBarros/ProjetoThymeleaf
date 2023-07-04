@@ -93,9 +93,15 @@
 						<input id="cidade" name="cidade" class="validate" th:field="*{cidade}">
 						<label for="cidade"  class="active">Cidade</label>
 					</div>
-					<div class="input-field col s7">
+					<div class="input-field col s2">
 						<input id="uf" name="uf" class="validate" th:field="*{uf}">
 						<label for="uf"  class="active">UF</label>
+					</div>
+					<div class="input-field col s5">
+						<label for="profissao" class="active">Profissão</label>
+						<select class="browser-default" th:field="*{profissao}" id="profissao">
+							<option th:each="p: ${profissoes}" th:value="${p.id}" th:text="${p.nome}" />
+						</select>
 					</div>
 					
 				</div>
