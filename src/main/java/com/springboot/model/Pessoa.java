@@ -1,15 +1,21 @@
 package com.springboot.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -17,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Pessoa implements Serializable{
@@ -41,7 +48,7 @@ public class Pessoa implements Serializable{
 	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Telefone> telefones;
 	
-	@Pattern(regexp = "\\d{5}-\\d{3}")
+	
 	private String cep;
 	private String rua;
 	private String bairro;
@@ -57,9 +64,38 @@ public class Pessoa implements Serializable{
 	@ManyToOne
 	private Profissao profissao;
 	
+	@Enumerated(EnumType.STRING)
+	private Cargo cargo;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	private Date dataNascimento;
+	
+	@Lob
+	private byte[] curriculo;
 	
 	
 	
+	public void setCurriculo(byte[] curriculo) {
+		this.curriculo = curriculo;
+	}
+	public byte[] getCurriculo() {
+		return curriculo;
+	}
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+	public void setCargo(Cargo cargo) {
+		this.cargo = cargo;
+
+	}
+
+	public Cargo getCargo() {
+		return cargo;
+	}
 	public void setProfissao(Profissao profissao) {
 		this.profissao = profissao;
 	}
