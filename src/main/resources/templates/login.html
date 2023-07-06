@@ -37,7 +37,7 @@
 	
 	<h4 class="indigo-text">Bem vindo ao Projeto Thymeleaf</h4>
 	
-	<form th:action="@{/login}" method="post" class="col s12">
+	<form th:action="@{/login}" method="post" class="col s12" autocomplete="off">
 		<div class="card-panel z-depth-5">
 			<div class="row margin">
 				<div class="col s12 m12 l12 center">
@@ -50,7 +50,7 @@
 					<div class="input-field">
 						<i class="material-icons prefix">person</i>
 						<label for="username" >Login</label>
-						<input type="text" id="username" name="username">
+						<input type="text" id="username" name="username" autocomplete="off">
 					</div>
 				</div>
 			

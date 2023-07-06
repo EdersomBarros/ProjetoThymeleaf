@@ -35,23 +35,23 @@
 			</div>
 		<br/>
 		<div class="col s12">
-			<form action="salvarpessoa" id="formpessoa" method="post" th:object="${pessoaobj}" class="col s12" enctype="multipart/form-data">
+			<form action="salvarpessoa" id="formpessoa" method="post" th:object="${pessoaobj}"  class="col s12" enctype="multipart/form-data" autocomplete="off" >
 				<div class="row">
 					<div class="input-fiel col s1 ">
 						<label for="id">ID</label>
-						<input  name="id" th:field="*{id}" id="id" readonly="readonly">
+						<input  name="id" th:field="*{id}" id="id" readonly="readonly" >
 					</div>
 					<div class="input-fiel col s11 ">
 						
 						<label for="nome" class="active" >Nome:</label>
-						<input placeholder="Informe o nome da pessoa" name="nome" class="validate" id="nome" th:field="*{nome}">
+						<input placeholder="Informe o nome da pessoa" name="nome" class="validate" id="nome" th:field="*{nome}" >
 					</div>
 				</div>
 				<div class="row">
 					<div class="input-fiel col s4 ">
 						<label for="sobrenome" class="active">Sobrenome:</label>
 						<input placeholder="Informe o sobrenome da pessoa" name="sobrenome" class="validate" id="sobrenome"
-							th:field="*{sobrenome}">
+							th:field="*{sobrenome}" >
 					</div>
 					<div sec:authorize="hasAnyRole('ROLE_TECNICO')" class="input-fiel col s1">
 						<label for="idade" class="active">Idade:</label>
@@ -78,7 +78,7 @@
 						<label for="cep"  class="active">Cep</label>
 					</div>
 					<div class="input-field col s3">
-						<input id="rua" name="rua" class="validate" th:field="*{rua}">
+						<input id="rua" name="rua" class="validate" th:field="*{rua}" >
 						<label for="rua"  class="active">Rua</label>
 					</div>
 										<div class="input-field col s3">
@@ -115,7 +115,8 @@
 					<div class="input-field col s3">
 						<label for="dataNascimento" class="active">Data de Nascimento:</label>
 						<input type="text" id="dataNascimento" th:field="*{dataNascimento}" name="dataNascimento"
-							placeholder="Data Nasc.">
+						 placeholder="Data Nasc."
+							class="validate">
 					</div>
 					<div class="file-field input-field col s4">
 						<div class="btn">
@@ -132,9 +133,7 @@
 				<div class="row">
 					<div class="input-fiel col s6 ">
 						<input class="btn waves-effect waves-light" type="submit" value="Salvar" />
-						<button class="btn waves-effect waves-light" onclick="document
-						.getElementById('formpessoa')
-						.reset();"
+						<button class="btn waves-effect waves-light" onclick="document.getElementById('formpessoa').reset()"
 						>Novo</button>
 					</div>
 				</div>
@@ -188,7 +187,7 @@
 						<th>Id:</th>
 						<th>Nome</th>
 						<th>Sobrenome</th>
-						<th>Idade</th>
+						<th>Currículo</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -197,13 +196,16 @@
 						<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}"><span
 									th:text="${pessoa.nome}"></span></a></td>
 						<td th:text="${pessoa.sobrenome}"></td>
-						<td th:text="${pessoa.idade}"></td>
+						<td><a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}">Currículo</a>
+							<a th:if="${pessoa.curriculo == null}" style="color: firebrick;">Não Existe</a>
+						</td>
 						<td><a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}">Editar</a></td>
 						<td><a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}">Exluir</a></td>
 					</tr>
 				</tbody>
 			</table>
 		</fieldset>
+		<br>
 </section>
 
 <!-- Adicionando Javascript -->
@@ -212,7 +214,7 @@
 		
 		$('#dataNascimento').datepicker({
 			showOthermonths:true,
-			format: 'yyyy-mm-dd'
+			format:'dd/mm/yyyy'
 		});
 		
 		function limpa_formulário_cep() {

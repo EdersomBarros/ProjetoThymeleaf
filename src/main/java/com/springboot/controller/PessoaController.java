@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -23,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springboot.model.Pessoa;
-import com.springboot.model.Profissao;
 import com.springboot.model.Telefone;
 import com.springboot.repository.PessoaRepository;
 import com.springboot.repository.ProfissaoRepository;
@@ -45,7 +46,7 @@ public class PessoaController {
 	public ModelAndView inicio() {
 		ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
 		andView.addObject("pessoaobj", new Pessoa());
-		Iterable<Pessoa> pessoaIt = pessoaRepository.findAll();
+		Iterable<Pessoa> pessoaIt = pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome")));
 		andView.addObject("pessoas", pessoaIt);		
 		andView.addObject("profissoes", profissaoRepository.findAll());
 
@@ -63,8 +64,7 @@ public class PessoaController {
 		
 		if (bindingResult.hasErrors()) {
 			ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");
-			Iterable<Pessoa> pessoaIt = pessoaRepository.findAll();
-			modelAndView.addObject("pessoas", pessoaIt);
+			modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome"))));
 			modelAndView.addObject("pessoaobj", pessoa);
 			modelAndView.addObject("profissoes", profissaoRepository.findAll());
 			
@@ -84,10 +84,14 @@ public class PessoaController {
 		
 		if (file.getSize() > 0) {
 			pessoa.setCurriculo(file.getBytes());
+			pessoa.setTipoFileCurriculo(file.getContentType());
+			pessoa.setNomeFileCurriculo(file.getOriginalFilename());
 		} else {
 			if (pessoa.getId() != null && pessoa.getId() > 0) {
-				byte[] curriculoTempo = pessoaRepository.findById(pessoa.getId()).get().getCurriculo();
-				pessoa.setCurriculo(curriculoTempo);
+				Pessoa pessoaTempo = pessoaRepository.findById(pessoa.getId()).get();
+				pessoa.setCurriculo(pessoaTempo.getCurriculo());
+				pessoa.setTipoFileCurriculo(pessoaTempo.getTipoFileCurriculo());
+				pessoa.setNomeFileCurriculo(pessoaTempo.getNomeFileCurriculo());
 			}
 		}
 
@@ -102,8 +106,7 @@ public class PessoaController {
 	@RequestMapping(method = RequestMethod.GET, value = "/listapessoas")
 	public ModelAndView pessoas() {
 		ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
-		Iterable<Pessoa> pessoaIt = pessoaRepository.findAll();
-		andView.addObject("pessoas", pessoaIt);
+		andView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome"))));
 		andView.addObject("pessoaobj", new Pessoa());
 		andView.addObject("profissoes", profissaoRepository.findAll());
 		return andView;
@@ -141,7 +144,7 @@ public class PessoaController {
 		pessoaRepository.deleteById(idpessoa);
 		
 		ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
-		andView.addObject("pessoas", pessoaRepository.findAll());
+		andView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome"))));
 		andView.addObject("pessoaobj", new Pessoa());
 
 		return andView;
@@ -256,6 +259,28 @@ public class PessoaController {
 		response.setHeader(headerKey, headerValue);
 		/*Finaliza a resposta ao navegador*/
 		response.getOutputStream().write(pdf);
+		
+	}
+	@GetMapping("**/baixarcurriculo/{idpessoa}")
+	public void baixarcurriculo(@PathVariable("idpessoa") Long idpessoa, HttpServletResponse response) throws IOException {
+		
+		/*Consultar o objeto pessoa no banco de dados*/
+		 Pessoa pessoa = pessoaRepository.findById(idpessoa).get();
+		 if (pessoa.getCurriculo() != null) {
+			 /*Setar o tamanho da resposta*/
+			 response.setContentLength(pessoa.getCurriculo().length);
+			 /*Tipo do Arquivo para download ou pode ser genérica application*/
+			 response.setContentType(pessoa.getTipoFileCurriculo());
+			 
+			 String headerKey = "Content-Disposition";
+			 String headerValue = String.format("attachment; filename=\"%s\"", pessoa.getNomeFileCurriculo());
+			 response.setHeader(headerKey, headerValue);
+			 
+			 /*Finaliza a resposta passando o arquivo*/
+			 response.getOutputStream().write(pessoa.getCurriculo());
+			 
+			
+		}
 		
 	}
 
