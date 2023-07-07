@@ -191,7 +191,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="pessoa:${pessoas}">
+					<tr th:each="pessoa:${pessoas.content}">
 						<td th:text="${pessoa.id}"></td>
 						<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}"><span
 									th:text="${pessoa.nome}"></span></a></td>
