@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,11 +117,12 @@ public class PessoaController {
 	}
 	@GetMapping("/pessoaspag")
 	public ModelAndView carregaPessoaPorPaginacao(@PageableDefault(size = 5) Pageable pageable,
-			ModelAndView model) {
+			ModelAndView model, @RequestParam("nomepesquisa") String nomepesquisa) {
 		
-		Page<Pessoa> pagePessoa = pessoaRepository.findAll(pageable);
+		Page<Pessoa> pagePessoa = pessoaRepository.findPessoaByNamePage(nomepesquisa, pageable);
 		model.addObject("pessoas", pagePessoa);
 		model.addObject("pessoaobj", new Pessoa());
+		model.addObject("nomepesquisa", nomepesquisa);
 		model.setViewName("cadastro/cadastropessoa");
 		
 		return model;
@@ -166,23 +166,24 @@ public class PessoaController {
 		return andView;
 
 	}
+
 	@PostMapping("**/pesquisapessoa")
 	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa,
-			@RequestParam("pesqsexo") String pesqsexo){
-		
-		List<Pessoa> pessoas = new ArrayList<Pessoa>();
-		
+			@RequestParam("pesqsexo") String pesqsexo,
+			@PageableDefault(size = 5, sort = { "nome" }) Pageable pageable) {
+
+		Page<Pessoa> pessoas = null;
+
 		if (pesqsexo != null && !pesqsexo.isEmpty()) {
-			
-			pessoas = pessoaRepository.findPessoaByNameSexo(nomepesquisa, pesqsexo);			
-		}else {
-			pessoas = pessoaRepository.findPessoaByName(nomepesquisa);
+			pessoas = pessoaRepository.findPessoaBySexoPage(nomepesquisa, pesqsexo, pageable);
+		} else {
+			pessoas = pessoaRepository.findPessoaByNamePage(nomepesquisa, pageable);
 		}
-		
+
 		ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
 		andView.addObject("pessoas", pessoas);
 		andView.addObject("pessoaobj", new Pessoa());
-		andView.addObject("profissoes", profissaoRepository.findAll());
+		andView.addObject("nomepesquisa", nomepesquisa);
 		return andView;
 	}
 

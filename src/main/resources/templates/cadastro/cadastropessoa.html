@@ -20,12 +20,40 @@
 	
 </head>
 <style>
-
 	form input[type=submit] {
 		color: white;
 	}
+
+	table {
+		width: 100%;
+	}
+	table td,
+	table th {
+		border: 1px solid grey;
+	}
+	table th{
+		background: #eee;
+	}
+	nav {
+		background: #424242;
+	}
+	
 </style>
+
 <body>
+	<nav>
+    <div class="nav-wrapper">
+      <a href="/login" class="brand-logo">Projeto Thymeleaf</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/cadastropessoa">Cadastro Pessoa</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">Javascript</a></li>
+        <li><a href="/login">Sair</a></li>
+      </ul>
+    </div>
+  </nav>
+	
 	<section class="container">
 	<h5 class="center-align">CADASTRO DE PESSOAS</h5>
 	<div class="row">
@@ -154,7 +182,8 @@
 					<form action="pesquisapessoa" id="pesquisapessoa" method="post">
 						<div class="input-fiel col s6 ">
 							<label for="nomepesquisa" class="active">Pesquisa por Nome</label>
-							<input name="nomepesquisa" class="validate" id="nomepesquisa">
+							<input name="nomepesquisa" class="validate" id="nomepesquisa"
+							th:value="${nomepesquisa}">
 						</div>
 						<div class="input-field col s6">
 							<label for="pesqsexo" class="active">Pesquisa Sexo</label>
@@ -188,6 +217,8 @@
 						<th>Nome</th>
 						<th>Sobrenome</th>
 						<th>Currículo</th>
+						<th>Editar</th>
+						<th>Excluir</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -204,6 +235,19 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="pagination" style="margin-top: 30px;">
+				<center>
+					<span th:if="${pessoas.hasPrevious()}">
+						<a th:href="@{/pessoaspag(page=${pessoas.number-1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Anterior</a>
+					</span>
+					<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages - 1)}">
+						<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">[[ ${i} + 1 ]]</a>
+					</th:block>
+					<span th:if="${pessoas.hasNext()}">
+						<a th:href="@{/pessoaspag(page=${pessoas.number+1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Próximo</a>
+					</span>
+				</center>
+			</div>
 		</fieldset>
 		<br>
 </section>
