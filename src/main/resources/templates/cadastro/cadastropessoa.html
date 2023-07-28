@@ -47,7 +47,7 @@
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="/cadastropessoa">Cadastro Pessoa</a></li>
-        <li><a href="badges.html">Components</a></li>
+        <li><a href="/telefones">Telefones</a></li>
         <li><a href="collapsible.html">Javascript</a></li>
         <li><a href="/login">Sair</a></li>
       </ul>
@@ -222,7 +222,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="pessoa:${pessoas.content}">
+					<tr th:each="pessoa: ${pessoas.content}">
 						<td th:text="${pessoa.id}"></td>
 						<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}"><span
 									th:text="${pessoa.nome}"></span></a></td>

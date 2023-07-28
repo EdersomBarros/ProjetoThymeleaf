@@ -49,10 +49,8 @@ public class PessoaController {
 	public ModelAndView inicio() {
 		ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
 		andView.addObject("pessoaobj", new Pessoa());
-		Iterable<Pessoa> pessoaIt = pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome")));
-		andView.addObject("pessoas", pessoaIt);		
+		andView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
 		andView.addObject("profissoes", profissaoRepository.findAll());
-
 
 		return andView;
 
@@ -69,7 +67,6 @@ public class PessoaController {
 			ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");
 			modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome"))));
 			modelAndView.addObject("pessoaobj", pessoa);
-			modelAndView.addObject("profissoes", profissaoRepository.findAll());
 			
 			List<String> msg = new ArrayList<String>();
 			
@@ -81,7 +78,6 @@ public class PessoaController {
 			
 			modelAndView.addObject("msg", msg);
 			modelAndView.addObject("profissoes", profissaoRepository.findAll());
-			
 			return modelAndView;
 		}
 		
@@ -100,8 +96,7 @@ public class PessoaController {
 
 		pessoaRepository.save(pessoa);
 		ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
-		Iterable<Pessoa> pessoaIt = pessoaRepository.findAll();
-		andView.addObject("pessoas", pessoaIt);
+		andView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0,5, Sort.by("nome"))));
 		andView.addObject("pessoaobj", new Pessoa());
 		return andView;
 	}
